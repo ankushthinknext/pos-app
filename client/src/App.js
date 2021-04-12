@@ -1,22 +1,19 @@
 import logo from "./logo.svg";
 import "./App.css";
+import Login from "./components/auth/Login";
+import { Route, Switch } from "react-router";
+import Dashboard from "./components/dashboard/Dashboard";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+import Products from "./components/dashboard/Products";
 console.log(process.env.REACT_APP_API_URL);
 function App() {
 	return (
-		<div className="App">
-			<header className="App-header">
-				<img src={logo} className="App-logo" alt="logo" />
-				<p>
-					Edit <code>src/App.js</code> and save to reload.
-				</p>
-				<a
-					className="App-link"
-					href="https://reactjs.org"
-					target="_blank"
-					rel="noopener noreferrer">
-					Learn React
-				</a>
-			</header>
+		<div>
+			<Switch>
+				<ProtectedRoute path="/dashboard" component={Dashboard} exact />
+				<ProtectedRoute path="/products" component={Products} />
+				<Route path="/login" exact component={Login} />
+			</Switch>
 		</div>
 	);
 }
