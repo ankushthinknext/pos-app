@@ -1,11 +1,17 @@
 import React from "react";
 import auth from "../services/auth";
+import "./index.css";
+import Sidebar from "./Sidebar";
 
 export default function Dashboard() {
 	return (
 		<div>
-			<h1>THis is dashboard</h1>
-			<button onClick={auth.logout}>Logout</button>
+			<div className="dashboard-area">
+				<div className="sidebar">
+					<Sidebar />
+				</div>
+				<div className="main-area"></div>
+			</div>
 		</div>
 	);
 }

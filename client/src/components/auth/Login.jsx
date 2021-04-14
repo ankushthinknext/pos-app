@@ -12,7 +12,6 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import auth from "../services/auth";
-
 import Joi from "joi-browser";
 
 const URL = process.env.REACT_APP_API_URL;
@@ -61,32 +60,50 @@ export default function Login(props) {
 	});
 	const [errors, setErrors] = useState([]);
 
-	const handleSubmit = (e) => {
-		async function attemptLogin() {
-			e.preventDefault();
-			let loginURL = `${URL}auth/login`;
-			let response = await fetch(loginURL, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(formData),
-			});
-			response = await response.json();
-			console.log(response);
-			if (response.status === "failed") {
-				setErrors(response.errors);
-			} else if ((response.status = "success")) {
-				setErrors([]);
-				localStorage.setItem("username", response.user.username);
-				localStorage.setItem("fullname", response.user.fullname);
-				localStorage.setItem("token", response.token);
-				props.history.push("/dashboard");
-			}
-		}
-		attemptLogin();
+	const schema = {
+		username: Joi.string().min(8).max(20).required(),
+		password: Joi.string().min(8).max(20).required(),
 	};
-	console.log(errors);
+	function browserValidate() {
+		let validationResults = Joi.validate(formData, schema, {
+			abortEarly: false,
+		});
+		console.log("browser validation results", validationResults);
+		if (validationResults.error) {
+			setErrors(validationResults.error.details);
+			return false;
+		}
+		return true;
+	}
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (browserValidate()) attemptLogin();
+	};
+
+	async function attemptLogin() {
+		let loginURL = `${URL}auth/login`;
+		let response = await fetch(loginURL, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(formData),
+		});
+
+		response = await response.json();
+		console.log(response);
+		if (response.status === "failed") {
+			if (!response.errors) setErrors([{ ...response }]);
+			else setErrors(response.errors);
+		} else if ((response.status = "success")) {
+			setErrors([]);
+			localStorage.setItem("username", response.user.username);
+			localStorage.setItem("fullname", response.user.fullname);
+			localStorage.setItem("token", response.token);
+			props.history.push("/dashboard");
+		}
+	}
+	console.log("errors state", errors);
 
 	const handleChange = (e) => {
 		let newFormData = { ...formData };
