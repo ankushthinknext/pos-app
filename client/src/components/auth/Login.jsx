@@ -135,6 +135,9 @@ export default function Login(props) {
 						className={classes.form}
 						noValidate>
 						<TextField
+							error={errors.find((err) => {
+								return err.path[0] === "username" ? true : false;
+							})}
 							variant="outlined"
 							margin="normal"
 							required
@@ -145,8 +148,12 @@ export default function Login(props) {
 							autoComplete="username"
 							autoFocus
 							value={formData.username}
+							helperText="you have error in username"
 						/>
 						<TextField
+							error={errors.find((err) => {
+								return err.path[0] === "password" ? true : false;
+							})}
 							variant="outlined"
 							margin="normal"
 							required

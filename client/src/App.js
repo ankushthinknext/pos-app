@@ -11,7 +11,9 @@ function App() {
 		<div>
 			<Switch>
 				<ProtectedRoute path="/dashboard" component={Dashboard} exact />
-				<ProtectedRoute path="/products" component={Products} />
+				<ProtectedRoute path="/users" component={Dashboard} />
+				<ProtectedRoute path="/category" component={Dashboard} />
+				<ProtectedRoute path="/products" component={Dashboard} />
 				<Route path="/login" exact component={Login} />
 			</Switch>
 		</div>
