@@ -32,3 +32,12 @@
 .dashboard-area {
 	display: flex;
 }
+.dashboard-navbar {
+	display: flex;
+	justify-content: flex-end;
+	background-color: aquamarine;
+}
+.user-avatar {
+	position: relative;
+	width: 30%;
+}
