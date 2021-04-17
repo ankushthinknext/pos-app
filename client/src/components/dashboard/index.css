@@ -38,7 +38,7 @@
 	background-color: aquamarine;
 }
 .main-area {
-	width: 100%;
+	flex-grow: 1;
 }
 .user-avatar {
 	position: relative;

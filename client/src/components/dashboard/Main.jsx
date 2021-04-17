@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Moment from "moment";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -25,6 +24,7 @@ export default function Main(props) {
 	const classes = useStyles();
 	let { count, total, qty: quantity } = props.dashboardData;
 	let { transactions } = props.transactionsData;
+	console.log(transactions);
 
 	return (
 		<div>
@@ -39,6 +39,7 @@ export default function Main(props) {
 					<h5>{quantity}</h5>
 				</div>
 			</div>
+
 			<div className={classes.root}>
 				<Grid container spacing={3}>
 					<Grid item xs={6}>
@@ -56,20 +57,21 @@ export default function Main(props) {
 									</TableRow>
 								</TableHead>
 								<TableBody>
-									{transactions.map((transaction) => (
-										<TableRow key={transaction._id}>
-											<TableCell>{transaction._id}</TableCell>
-											<TableCell align="right">
-												{/* {Moment(transaction.createdAt).format("MM/DD/YYYY")} */}
-											</TableCell>
-											<TableCell align="right">
-												{transaction.items.length}
-											</TableCell>
-											<TableCell align="right">
-												{transaction.subtotal}
-											</TableCell>
-										</TableRow>
-									))}
+									{transactions &&
+										transactions.map((transaction) => (
+											<TableRow key={transaction._id}>
+												<TableCell>{transaction._id}</TableCell>
+												<TableCell align="right">
+													{/* {Moment(transaction.createdAt).format("MM/DD/YYYY")} */}
+												</TableCell>
+												<TableCell align="right">
+													{transaction.items.length}
+												</TableCell>
+												<TableCell align="right">
+													{transaction.subtotal}
+												</TableCell>
+											</TableRow>
+										))}
 								</TableBody>
 							</Table>
 						</Paper>

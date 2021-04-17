@@ -13,13 +13,15 @@ export default function Dashboard(props) {
 	//
 	let [dashboardData, setDashboardData] = useState([]);
 	let [transactionsData, setTransactionsData] = useState([]);
+	let { transactions } = transactionsData;
+
 	let interval = {
 		limit: 20,
 		end: new Date(),
 		start: new Date(),
 	};
 	interval.start.setDate(interval.end.getDate() - 6);
-	console.log(interval);
+
 	useEffect(() => {
 		async function fetchDashboardData() {
 			let response = await fetch(`${URL}transaction/dashboard/?${query}`);
@@ -34,11 +36,8 @@ export default function Dashboard(props) {
 		fetchDashboardData();
 		fetchTransactionsData();
 	}, []);
-	console.log("dashboard", dashboardData);
-	console.log("transactions", transactionsData);
 
 	let query = queryString.stringify(interval);
-	console.log("query", query);
 
 	const sidebarLinks = [
 		{
@@ -46,11 +45,10 @@ export default function Dashboard(props) {
 			label: "Dashbord",
 			icon: <HomeIcon />,
 		},
-		{ path: "/users", label: "User", isActive: false, icon: <HomeIcon /> },
+		{ path: "/users", label: "User", icon: <HomeIcon /> },
 		{
 			path: "/category",
 			label: "Category",
-
 			icon: <HomeIcon />,
 		},
 		{
