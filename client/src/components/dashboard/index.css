@@ -37,7 +37,40 @@
 	justify-content: flex-end;
 	background-color: aquamarine;
 }
+.main-area {
+	width: 100%;
+}
 .user-avatar {
 	position: relative;
 	width: 30%;
+}
+.first-row {
+	display: flex;
+	justify-content: space-evenly;
+}
+.d-card {
+	width: 30%;
+	height: 100px;
+	border-radius: 20px;
+}
+.d-card-maroon {
+	background: linear-gradient(
+		16deg,
+		rgba(234, 81, 121, 1) 0%,
+		rgba(172, 54, 115, 1) 100%
+	);
+}
+.d-card-indigo {
+	background: linear-gradient(
+		16deg,
+		rgba(195, 84, 215, 1) 0%,
+		rgba(136, 74, 206, 1) 100%
+	);
+}
+.d-card-orange {
+	background: linear-gradient(
+		16deg,
+		rgba(245, 90, 158, 1) 0%,
+		rgba(255, 155, 106, 1) 100%
+	);
 }
