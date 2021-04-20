@@ -1,7 +1,6 @@
-import logo from "./logo.svg";
 import "./App.css";
 import Login from "./components/auth/Login";
-import { Route, Switch } from "react-router";
+import { Route, Switch, Redirect } from "react-router";
 import Dashboard from "./components/dashboard/Dashboard";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import Products from "./components/dashboard/Products";
@@ -14,6 +13,18 @@ function App() {
 				<ProtectedRoute path="/users" component={Dashboard} />
 				<ProtectedRoute path="/category" component={Dashboard} />
 				<ProtectedRoute path="/products" component={Dashboard} />
+				<ProtectedRoute path="/transaction" component={Dashboard} />
+				<ProtectedRoute path="/report" component={Dashboard} />
+				<Route
+                exact
+                path="/"
+                render={() => {
+                    return (
+                      
+                      <Redirect to="/login" /> 
+                    )
+                }}
+              />
 				<Route path="/login" exact component={Login} />
 			</Switch>
 		</div>

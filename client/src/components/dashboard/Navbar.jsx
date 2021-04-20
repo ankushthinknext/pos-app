@@ -1,11 +1,11 @@
 import React from "react";
-import Avatar from "@material-ui/core/Avatar";
+import SettingMenu from './SettingMenu';
 
 export default function Navbar() {
 	return (
-		<header class="dashboard-nav-bar">
+		<header class="dashboard-navbar">
 			<div className="user-avatar">
-				<Avatar>H</Avatar>
+				<SettingMenu></SettingMenu>
 			</div>
 		</header>
 	);

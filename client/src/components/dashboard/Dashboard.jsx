@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import auth from "../services/auth";
-import HomeIcon from "@material-ui/icons/Home";
+import {DataMenu} from './DataMenu';
 import "./index.css";
 import Sidebar from "./Sidebar";
 import queryString from "query-string";
 import Main from "./Main";
+import Navbar from './Navbar';
 
 export default function Dashboard(props) {
 	let URL = process.env.REACT_APP_API_URL;
@@ -39,31 +39,14 @@ export default function Dashboard(props) {
 
 	let query = queryString.stringify(interval);
 
-	const sidebarLinks = [
-		{
-			path: "/dashboard",
-			label: "Dashbord",
-			icon: <HomeIcon />,
-		},
-		{ path: "/users", label: "User", icon: <HomeIcon /> },
-		{
-			path: "/category",
-			label: "Category",
-			icon: <HomeIcon />,
-		},
-		{
-			path: "/products",
-			label: "Products",
-
-			icon: <HomeIcon />,
-		},
-	];
-
 	return (
 		<div>
 			<div className="dashboard-area ">
 				<div className="sidebar">
-					<Sidebar links={sidebarLinks} currentRoute={currentRoute} />
+					<Sidebar links={DataMenu} currentRoute={currentRoute} />
+				</div>
+				<div className="navbar">
+					<Navbar></Navbar>
 				</div>
 				<div className="main-area">
 					{currentRoute === "/dashboard" && (

@@ -31,22 +31,39 @@
 
 .dashboard-area {
 	display: flex;
+	align-content: flex-start;
+}
+.navbar{
+	align-self: flex-start;
+
 }
 .dashboard-navbar {
 	display: flex;
 	justify-content: flex-end;
-	background-color: aquamarine;
+	width: 89.2vw;
+	background-color: burlywood;
+	height: 60px;
+}
+.main{
+	display: flex;
+	flex-direction: column;
+	height: 80vh;
 }
 .main-area {
 	flex-grow: 1;
+	margin-top: 100px;
+	margin-left: 0;
 }
 .user-avatar {
 	position: relative;
-	width: 30%;
+	width: 10%;
+	margin-top: 10px;
+	height: 70%;
 }
 .first-row {
 	display: flex;
 	justify-content: space-evenly;
+	margin-bottom: 50px;
 }
 .d-card {
 	width: 30%;
@@ -73,4 +90,37 @@
 		rgba(245, 90, 158, 1) 0%,
 		rgba(255, 155, 106, 1) 100%
 	);
+}
+
+.nav-menu{
+    background-color: rgb(10, 2, 60);
+    height: 100vh;
+    width: 150px;
+    display: flex;
+    justify-content: flex-start;
+    top: 0;
+}
+
+.nav-text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    list-style: none;
+    height: 60px;
+}
+
+.nav-text a{
+    text-decoration: none;
+    color: #ffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar{
+	height: 60px;
+	background-color: #303456;
+	width: 20px;
 }
