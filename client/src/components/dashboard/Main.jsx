@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -8,6 +8,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Chart from "chart.js";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -21,6 +22,41 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Main(props) {
+	const chartContainer = useRef(null);
+	const [chartInstance, setChartInstance] = useState(null);
+	const getWeeklyData = () => {
+		let weekData = [];
+	};
+	const chartConfig = {
+		type: "line",
+		data: {
+			// ...
+			//Bring in data
+			labels: [
+				"Sunday",
+				"Monday",
+				"Tuesday",
+				"Wednesday",
+				"Thrusday",
+				"Friday",
+				"Saturday",
+			],
+			datasets: [
+				{
+					label: "label ankush",
+					data: [86, 67, 91, 50, 12, 34, 12],
+					backgroundColor: "#f3a8bd",
+				},
+			],
+		},
+		options: {},
+	};
+	useEffect(() => {
+		if (chartContainer && chartContainer.current) {
+			const newChartInstance = new Chart(chartContainer.current, chartConfig);
+			setChartInstance(newChartInstance);
+		}
+	}, [chartContainer]);
 	const classes = useStyles();
 	let { count, total, qty: quantity } = props.dashboardData;
 	let { transactions } = props.transactionsData;
@@ -43,7 +79,9 @@ export default function Main(props) {
 			<div className={classes.root}>
 				<Grid container spacing={3}>
 					<Grid item xs={6}>
-						<Paper className={classes.paper}>xs=6</Paper>
+						<Paper className={classes.paper}>
+							<canvas ref={chartContainer} />
+						</Paper>
 					</Grid>
 					<Grid item xs={6}>
 						<Paper className={classes.paper}>

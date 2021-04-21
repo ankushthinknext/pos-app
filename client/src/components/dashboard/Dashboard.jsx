@@ -5,6 +5,7 @@ import "./index.css";
 import Sidebar from "./Sidebar";
 import queryString from "query-string";
 import Main from "./Main";
+import Produts from "../products/Produts";
 
 export default function Dashboard(props) {
 	let URL = process.env.REACT_APP_API_URL;
@@ -21,7 +22,7 @@ export default function Dashboard(props) {
 		start: new Date(),
 	};
 	interval.start.setDate(interval.end.getDate() - 6);
-
+	console.log(transactionsData);
 	useEffect(() => {
 		async function fetchDashboardData() {
 			let response = await fetch(`${URL}transaction/dashboard/?${query}`);
@@ -72,6 +73,7 @@ export default function Dashboard(props) {
 							dashboardData={dashboardData}
 						/>
 					)}
+					{currentRoute === "/products" && <Produts />}
 				</div>
 			</div>
 		</div>
