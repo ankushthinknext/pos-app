@@ -8,8 +8,6 @@ function getChartData(transactions, period) {
 
 	let startDate = moment().startOf("isoweek");
 	let endDate = moment().endOf("isoweek");
-	console.log(startDate, endDate);
-	console.log(transactions);
 	for (let i = startDate; i <= endDate; i.add(1, "d")) {
 		let currentDay = i.format("D");
 		data.days.push(currentDay);

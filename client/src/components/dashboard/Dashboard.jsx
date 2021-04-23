@@ -8,6 +8,7 @@ import Main from "./Main";
 import Products from "../products/Products";
 import { Container } from "@material-ui/core";
 import moment from "moment";
+import Product from "../products/Product";
 
 export default function Dashboard(props) {
 	let URL = process.env.REACT_APP_API_URL;
@@ -73,6 +74,7 @@ export default function Dashboard(props) {
 							/>
 						)}
 						{currentRoute === "/products" && <Products />}
+						{currentRoute === "/product" && <Product />}
 					</div>
 				</Container>
 			</div>

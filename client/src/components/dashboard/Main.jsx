@@ -32,7 +32,6 @@ export default function Main() {
 
 	let [dashboardData, setDashboardData] = useState([]);
 	let [transactionsData, setTransactionsData] = useState([]);
-	let monthlyData = {};
 
 	useEffect(() => {
 		let interval = {
@@ -85,7 +84,7 @@ export default function Main() {
 					<h5>{dashboardData.total}</h5>
 				</div>
 				<div className="d-card d-card-orange">
-					<h5>{dashboardData.quantity}</h5>
+					<h5>{dashboardData.qty}</h5>
 				</div>
 			</div>
 
