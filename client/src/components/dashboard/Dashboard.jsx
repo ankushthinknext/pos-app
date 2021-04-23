@@ -5,24 +5,22 @@ import "./index.css";
 import Sidebar from "./Sidebar";
 import queryString from "query-string";
 import Main from "./Main";
-import Produts from "../products/Produts";
+import Products from "../products/Products";
+import { Container } from "@material-ui/core";
+import moment from "moment";
 
 export default function Dashboard(props) {
 	let URL = process.env.REACT_APP_API_URL;
 	let currentRoute = props.history.location.pathname;
 
-	//
 	let [dashboardData, setDashboardData] = useState([]);
 	let [transactionsData, setTransactionsData] = useState([]);
-	let { transactions } = transactionsData;
 
 	let interval = {
 		limit: 20,
-		end: new Date(),
-		start: new Date(),
+		start: moment().startOf("month"),
+		end: moment().endOf("month"),
 	};
-	interval.start.setDate(interval.end.getDate() - 6);
-	console.log(transactionsData);
 	useEffect(() => {
 		async function fetchDashboardData() {
 			let response = await fetch(`${URL}transaction/dashboard/?${query}`);
@@ -66,15 +64,17 @@ export default function Dashboard(props) {
 				<div className="sidebar">
 					<Sidebar links={sidebarLinks} currentRoute={currentRoute} />
 				</div>
-				<div className="main-area">
-					{currentRoute === "/dashboard" && (
-						<Main
-							transactionsData={transactionsData}
-							dashboardData={dashboardData}
-						/>
-					)}
-					{currentRoute === "/products" && <Produts />}
-				</div>
+				<Container>
+					<div className="main-area">
+						{currentRoute === "/dashboard" && (
+							<Main
+								transactionsData={transactionsData}
+								dashboardData={dashboardData}
+							/>
+						)}
+						{currentRoute === "/products" && <Products />}
+					</div>
+				</Container>
 			</div>
 		</div>
 	);
