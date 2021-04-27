@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,8 +12,9 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Select from "@material-ui/core/Select";
+import NativeSelect from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import queryString from "query-string";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -38,16 +39,82 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+const URL = process.env.REACT_APP_API_URL;
+
 export default function Product() {
 	const classes = useStyles();
+	const [categories, setCategories] = useState([]);
+	const [formData, setFormData] = useState({
+		name: "",
+		price: "",
+		description: "",
+		category: "",
+	});
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		let form_data = new FormData();
+		Object.keys(formData).map((key) => {
+			return form_data.append(key, formData[key]);
+		});
+		console.log(form_data);
+		fetch(`${URL}product`, {
+			method: "POST",
+			body: form_data,
+		});
+	};
+	const handleChange = (e) => {
+		const newFormData = { ...formData };
+		newFormData[e.target.name] = e.target.value;
+		setFormData(newFormData);
+	};
+	const handleFileChange = async (e) => {
+		let asd = e.target.files[0];
+		// console.log(file);
+		const toBase64 = (file) =>
+			new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.onload = () => resolve(reader.result);
+				reader.onerror = (error) => reject(error);
+			});
+
+		// function getBase64(asd) {
+		// 	var reader = new FileReader();
+		// 	reader.readAsDataURL(asd);
+		// 	reader.onload = function () {
+		// 		setFormData({ ...formData, image: reader.result });
+		// 	};
+		// 	reader.onerror = function (error) {
+		// 		console.log("Error: ", error);
+		// 	};
+		// }
+		let result = await toBase64(asd);
+		let newFormData = { ...formData };
+		newFormData.image = result;
+		setFormData(newFormData);
+	};
+
+	useEffect(() => {
+		async function getCategories() {
+			let response = await fetch(`${URL}category`);
+			let { data } = await response.json();
+			setCategories(data.categories);
+		}
+		getCategories();
+	}, []);
+	console.log(formData);
 
 	return (
 		<Container component="main" maxWidth="lg">
 			<div className={classes.paper}>
-				<Typography component="h1" variant="h5">
+				<Typography component="h1" variant="h5" align="left">
 					Product Form
 				</Typography>
-				<form className={classes.form} noValidate>
+				<form
+					className={classes.form}
+					onChange={handleChange}
+					onSubmit={handleSubmit}>
 					<Grid container spacing={2}>
 						<Grid item xs={12} sm={6}>
 							<TextField
@@ -86,23 +153,29 @@ export default function Product() {
 							/>
 						</Grid>
 						<Grid item xs={12}>
-							<Select
+							<NativeSelect
 								style={{ width: "100%" }}
+								native
 								labelId="demo-simple-select-filled-label"
+								name="category"
 								id="demo-simple-select-filled"
-								value="">
-								<MenuItem value={10}>Ten</MenuItem>
-								<MenuItem value={20}>Twenty</MenuItem>
-								<MenuItem value={30}>Thirty</MenuItem>
-							</Select>
+								value="12">
+								{categories &&
+									categories.map((category) => (
+										<option key={category._id} value={category._id}>
+											{category.name}
+										</option>
+									))}
+							</NativeSelect>
 						</Grid>
 						<Grid item xs={12}>
 							<input
+								name="file"
+								onChange={handleFileChange}
 								style={{ display: "none" }}
 								accept="image/*"
 								className={classes.input}
 								id="contained-button-file"
-								multiple
 								type="file"
 							/>
 							<label htmlFor="contained-button-file">
