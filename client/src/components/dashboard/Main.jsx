@@ -1,13 +1,18 @@
-import React, { useEffect } from "react";
+import React, {  useEffect, useState  } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+
+import queryString from "query-string";
+import moment from 'moment';
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import getChartData from './Chart';
+import { Line } from 'react-chartjs-2';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -20,31 +25,87 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function Main(props) {
+export default function Main() {
 	const classes = useStyles();
-	let { count, total, qty: quantity } = props.dashboardData;
-	let { transactions } = props.transactionsData;
-	console.log(transactions);
+
+	let URL = process.env.REACT_APP_API_URL;
+
+	let [dashboardData, setDashboardData] = useState([]);
+	let [transactionsData, setTransactionsData] = useState([]);
+
+	const [chartDataSet, setChartDataSet] = useState();
+	
+	let interval = {
+		limit: 20,
+		end: new Date(),
+		start: new Date(),
+	};
+	interval.start.setDate(interval.end.getDate() - 6);
+
+	let query = queryString.stringify(interval);
+
+	useEffect(() => {
+		async function fetchDashboardData() {
+			let response = await fetch(`${URL}transaction/dashboard/?${query}`);
+			let { data } = await response.json();
+			setDashboardData(data);
+		}
+		async function fetchTransactionsData() {
+			let response = await fetch(`${URL}transaction/?${query}`);
+			let { data } = await response.json();
+			setTransactionsData(data);
+
+			let chartData = getChartData(data.transactions, "week");
+			let chartConfig = {
+						data : {
+								labels : chartData.days,
+								datasets: [
+									{
+										label: "Income",
+										data : chartData.transactions,
+										backgroundColor: "#f3a8bd",
+									},
+								] 
+							},
+							options: {
+								responsive: true,
+							}
+			}
+
+			setChartDataSet(chartConfig.data);
+		}
+		fetchDashboardData();
+		fetchTransactionsData();
+	}, []);
+	console.log(dashboardData, transactionsData);
+	console.log("chartDataSet",chartDataSet);
+	
 
 	return (
 		<div>
 			<div className="main">
 				<div className="first-row">
 					<div className="d-card d-card-maroon">
-						<h5>{count}</h5>
+						<h5>{dashboardData.count}</h5>
 					</div>
 					<div className="d-card d-card-indigo">
-						<h5>{total}</h5>
+						<h5>{dashboardData.total}</h5>
 					</div>
 					<div className="d-card d-card-orange">
-						<h5>{quantity}</h5>
+						<h5>{dashboardData.qty}</h5>
 					</div>
 				</div>
 
 				<div className={classes.root}>
 					<Grid container spacing={3}>
 						<Grid item xs={6}>
-							<Paper className={classes.paper}>xs=6</Paper>
+							<Paper className={classes.paper}>
+								<Line
+									data = {chartDataSet}
+								>
+								</Line>
+							</Paper>
+							
 						</Grid>
 						<Grid item xs={6}>
 							<Paper className={classes.paper}>
@@ -58,12 +119,12 @@ export default function Main(props) {
 										</TableRow>
 									</TableHead>
 									<TableBody>
-										{transactions &&
-											transactions.map((transaction) => (
+										{transactionsData.transactions &&
+											transactionsData.transactions.map((transaction) => (
 												<TableRow key={transaction._id}>
 													<TableCell>{transaction._id}</TableCell>
 													<TableCell align="right">
-														{/* {Moment(transaction.createdAt).format("MM/DD/YYYY")} */}
+														{moment(transaction.createdAt).format("ll")}	
 													</TableCell>
 													<TableCell align="right">
 														{transaction.items.length}

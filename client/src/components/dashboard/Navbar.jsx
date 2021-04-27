@@ -3,7 +3,7 @@ import SettingMenu from './SettingMenu';
 
 export default function Navbar() {
 	return (
-		<header class="dashboard-navbar">
+		<header className="dashboard-navbar">
 			<div className="user-avatar">
 				<SettingMenu></SettingMenu>
 			</div>
