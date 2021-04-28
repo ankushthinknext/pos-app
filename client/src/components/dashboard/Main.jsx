@@ -69,7 +69,7 @@ export default function Main() {
 							},
 							options: {
 								responsive: true,
-							}
+							},
 			}
 
 			setChartDataSet(chartConfig.data);
