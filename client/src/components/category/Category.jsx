@@ -93,7 +93,7 @@ export default function Category() {
         setOpenDialog(false);
         setSelectedID("");
     }
-    
+
     return (
         <div>
             <Container maxWidth="lg">
@@ -118,7 +118,7 @@ export default function Category() {
 								categories.map((category) => (
 									<TableRow key={category._id}>
 										<TableCell align="left">{category.name}</TableCell>
-										<TableCell align="left">
+										<TableCell align="right">
 											<Link to="category/update">
 												<FaIcons.FaEdit />
 											</Link>
