@@ -104,7 +104,7 @@ function Produts() {
 											/>
 										</TableCell>
 										<TableCell align="right">
-											<Link to="products/new">
+											<Link to={`product/${product._id}`}>
 												<EditIcon />
 											</Link>
 											<DeleteIcon onClick={() => confirmDelete(product._id)} />

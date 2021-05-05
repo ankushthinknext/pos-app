@@ -9,6 +9,10 @@ import Products from "../products/Products";
 import { Container } from "@material-ui/core";
 import moment from "moment";
 import Product from "../products/Product";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import Categories from "../category/Categories";
+import Category from "../category/Category";
 
 export default function Dashboard(props) {
 	let URL = process.env.REACT_APP_API_URL;
@@ -16,6 +20,20 @@ export default function Dashboard(props) {
 
 	let [dashboardData, setDashboardData] = useState([]);
 	let [transactionsData, setTransactionsData] = useState([]);
+	let [notification, setNotification] = useState({
+		open: false,
+		message: "Transaction Successful!",
+		vertical: "top",
+		horizontal: "center",
+	});
+	function Alert(props) {
+		return <MuiAlert elevation={6} variant="filled" {...props} />;
+	}
+	const handleClose = (event, reason) => {
+		let note = { ...notification };
+		note.open = false;
+		setNotification(note);
+	};
 
 	let interval = {
 		limit: 20,
@@ -62,6 +80,15 @@ export default function Dashboard(props) {
 	return (
 		<div>
 			<div className="dashboard-area ">
+				<Snackbar
+					anchorOrigin={{ vertical: "top", horizontal: "center" }}
+					open={notification.open}
+					autoHideDuration={2000}
+					onClose={handleClose}>
+					<Alert onClose={handleClose} severity="success">
+						{notification.message}
+					</Alert>
+				</Snackbar>
 				<div className="sidebar">
 					<Sidebar links={sidebarLinks} currentRoute={currentRoute} />
 				</div>
@@ -74,7 +101,9 @@ export default function Dashboard(props) {
 							/>
 						)}
 						{currentRoute === "/products" && <Products />}
-						{currentRoute === "/product" && <Product />}
+						{currentRoute === "/categories" && <Categories />}
+						{currentRoute.startsWith("/product/") && <Product />}
+						{currentRoute.startsWith("/category/") && <Category />}
 					</div>
 				</Container>
 			</div>

@@ -15,6 +15,8 @@ import Container from "@material-ui/core/Container";
 import NativeSelect from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import queryString from "query-string";
+import { useParams } from "react-router";
+import { VerifiedUserOutlined } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -42,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 const URL = process.env.REACT_APP_API_URL;
 
 export default function Product() {
+	const params = useParams();
 	const classes = useStyles();
 	const [categories, setCategories] = useState([]);
 	const [formData, setFormData] = useState({
@@ -50,22 +53,29 @@ export default function Product() {
 		description: "",
 		category: "",
 	});
+	const [productId, setProductId] = useState(params.id);
+	const [method, setMethod] = useState(productId ? "PUT" : "POST");
 
+	console.log(method);
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		let form_data = new FormData();
 		Object.keys(formData).map((key) => {
+			if (formData[key] === "category")
+				return form_data.append(key, formData[key]);
 			return form_data.append(key, formData[key]);
 		});
 		console.log(form_data);
-		fetch(`${URL}product`, {
-			method: "POST",
+		fetch(`${URL}product/${productId}`, {
+			method: method,
 			body: form_data,
 		});
 	};
 	const handleChange = (e) => {
 		const newFormData = { ...formData };
 		newFormData[e.target.name] = e.target.value;
+		if (e.target.name === "category")
+			newFormData[e.target.name] = e.target.value;
 		setFormData(newFormData);
 	};
 	const handleFileChange = async (e) => {
@@ -78,17 +88,6 @@ export default function Product() {
 				reader.onload = () => resolve(reader.result);
 				reader.onerror = (error) => reject(error);
 			});
-
-		// function getBase64(asd) {
-		// 	var reader = new FileReader();
-		// 	reader.readAsDataURL(asd);
-		// 	reader.onload = function () {
-		// 		setFormData({ ...formData, image: reader.result });
-		// 	};
-		// 	reader.onerror = function (error) {
-		// 		console.log("Error: ", error);
-		// 	};
-		// }
 		let result = await toBase64(asd);
 		let newFormData = { ...formData };
 		newFormData.image = result;
@@ -101,9 +100,15 @@ export default function Product() {
 			let { data } = await response.json();
 			setCategories(data.categories);
 		}
+		async function getProduct(id) {
+			let response = await fetch(`${URL}product/${id}`);
+			response = await response.json();
+			setFormData(response.data);
+		}
 		getCategories();
+		getProduct(productId);
 	}, []);
-	console.log(formData);
+	// console.log(formData);
 
 	return (
 		<Container component="main" maxWidth="lg">
@@ -126,6 +131,7 @@ export default function Product() {
 								id="name"
 								label="Name"
 								autoFocus
+								value={productId && formData.name}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -137,6 +143,7 @@ export default function Product() {
 								label="Price"
 								name="price"
 								autoComplete="price"
+								value={productId && formData.price}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -150,6 +157,7 @@ export default function Product() {
 								label="Description"
 								placeholder="Product Description"
 								name="description"
+								value={productId && formData.description}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -162,7 +170,12 @@ export default function Product() {
 								value="12">
 								{categories &&
 									categories.map((category) => (
-										<option key={category._id} value={category._id}>
+										<option
+											key={category._id}
+											selected={
+												productId && categories._id === formData.category
+											}
+											value={category._id}>
 											{category.name}
 										</option>
 									))}
