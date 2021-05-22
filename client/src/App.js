@@ -5,7 +5,7 @@ import { Route, Switch } from "react-router";
 import Dashboard from "./components/dashboard/Dashboard";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import Products from "./components/dashboard/Products";
-console.log(process.env.REACT_APP_API_URL);
+
 function App() {
 	return (
 		<div>
@@ -17,6 +17,7 @@ function App() {
 				<ProtectedRoute path="/product/:id?" component={Dashboard} />
 				<ProtectedRoute path="/categories" component={Dashboard} />
 				<ProtectedRoute path="/category/:id?" component={Dashboard} />
+				<ProtectedRoute path="/transactions" component={Dashboard} />
 				<Route path="/login" exact component={Login} />
 			</Switch>
 		</div>

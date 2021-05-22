@@ -66,7 +66,7 @@ export default function Product() {
 			return form_data.append(key, formData[key]);
 		});
 		console.log(form_data);
-		fetch(`${URL}product/${productId}`, {
+		fetch(`${URL}product/${productId ? productId : ""}`, {
 			method: method,
 			body: form_data,
 		});

@@ -13,6 +13,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import Categories from "../category/Categories";
 import Category from "../category/Category";
+import Transactions from "../transactions/Transactions";
 
 export default function Dashboard(props) {
 	let URL = process.env.REACT_APP_API_URL;
@@ -104,6 +105,7 @@ export default function Dashboard(props) {
 						{currentRoute === "/categories" && <Categories />}
 						{currentRoute.startsWith("/product/") && <Product />}
 						{currentRoute.startsWith("/category/") && <Category />}
+						{currentRoute === "/transactions" && <Transactions />}
 					</div>
 				</Container>
 			</div>
