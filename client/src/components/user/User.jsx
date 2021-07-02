@@ -1,7 +1,6 @@
 import React , {useState, useEffect} from 'react';
 import queryString from "query-string";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -18,16 +17,29 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Button from "@material-ui/core/Button";
 import * as FaIcons from 'react-icons/fa';
+import * as AiIcons from 'react-icons/ai';
+
+import IconButton from '@material-ui/core/IconButton';
+
+import {Link} from 'react-router-dom';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import moment from 'moment';
+import { blue} from '@material-ui/core/colors';
 
-const useStyles = makeStyles({
+
+const useStyles = makeStyles((theme) => ({
 	table: {
 		minWidth: 650,
 	},
-});
+    snack: {
+        backgroundColor: blue,
+    },
+    button: {
+        margin: theme.spacing(1),
+    },
+}));
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -35,7 +47,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
-export default function User() {
+export default function User(props) {
+    console.log(props);
 
     const classes = useStyles();
 
@@ -58,16 +71,18 @@ export default function User() {
 
 
     useEffect(() => {
-        async function getUsers(){
-            let response = await(fetch(
-                `${URL}user?${query}`
-            ));
-            response = await response.json();
-            console.log(response);
-            setUsers(response.data.users);
-        }
         getUsers();
     }, []);
+
+    async function getUsers(){
+        let response = await(fetch(
+            `${URL}user?${query}`
+        ));
+        response = await response.json();
+        console.log("getUser", response);
+        setUsers(response.data.users);
+        
+    }
 
     const confirmDelete = (id) => {
         setSelectedID(id);
@@ -79,6 +94,7 @@ export default function User() {
             return;
         }
         setOpenDialog(false);
+        setOpenToast(false);
         setSelectedID("");
     }
 
@@ -96,12 +112,24 @@ export default function User() {
         }
         setOpenDialog(false);
         setSelectedID("");
+        getUsers();
     }
 
 
     return (
         <div>
+            
             <Container maxWidth="lg">
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                    startIcon={<AiIcons.AiOutlinePlus></AiIcons.AiOutlinePlus>}
+                    onClick={() =>
+                        props.history.push({ pathname: 'user/create'})}
+                >
+                    New Data
+                </Button>
 				<TableContainer component={Paper}>
 					<Table className={classes.table} aria-label="simple table">
 						<TableHead>
@@ -132,10 +160,16 @@ export default function User() {
 														{moment(user.lastactive).format("LLL")}	
 										</TableCell>
 										<TableCell align="right">
-											<Link to="users/update">
-												<FaIcons.FaEdit />
-											</Link>
-                                            <FaIcons.FaTrash onClick={() => confirmDelete(user._id)}/>
+                                            {/* <Link to={`/admin/user/update/${user._id}`}>
+                                                <FaIcons.FaEdit />
+											</Link> */}
+                                            <IconButton color="primary" onClick={() => props.history.push({
+                                                    pathname: 'user/update/' + user._id })}>
+                                                <FaIcons.FaEdit />
+                                            </IconButton>
+                                            <IconButton color="secondary" onClick={() => confirmDelete(user._id)}>
+                                                <FaIcons.FaTrash />
+                                            </IconButton>
 										</TableCell>
 									</TableRow>
 								))}
@@ -164,7 +198,7 @@ export default function User() {
 					</Button>
 				</DialogActions>
 			</Dialog>
-            <Snackbar open={openToast} autoHideDuration={3000} onClose={handleClose}>
+            <Snackbar open={openToast} autoHideDuration={2000} onClose={handleClose} className="snack">
                 <Alert onClose={handleClose} severity="success" color="success">
                     User removed successfully!
                 </Alert>

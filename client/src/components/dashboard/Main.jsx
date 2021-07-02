@@ -100,10 +100,12 @@ export default function Main() {
 					<Grid container spacing={3}>
 						<Grid item xs={6}>
 							<Paper className={classes.paper}>
-								<Line
+								{chartDataSet && (
+									<Line
 									data = {chartDataSet}
-								>
-								</Line>
+									>
+									</Line>
+								)}
 							</Paper>
 							
 						</Grid>

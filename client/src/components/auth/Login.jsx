@@ -71,7 +71,7 @@ export default function Login(props) {
 
   
   const onSubmit = async (payload) => {
-    
+        
     try {
       let loginURL = `${URL}auth/login`;
       let response = await fetch(loginURL, {
@@ -82,16 +82,16 @@ export default function Login(props) {
         body: JSON.stringify(payload)
       });                                                                    
 
+      
+      response = await response.json();
       let status = await response.status;
-      response = await response.json;
       console.log("response", response);
 
-      if (status === 200) {
+      if (status === "success") {
         console.log(response.message);
-        localStorage.setItem("username", response.username);
-		localStorage.setItem("fullname", response.fullname);
-		localStorage.setItem("token", response.token);
-		props.history.push("/dashboard");
+        localStorage.setItem("user", JSON.stringify(response.user));
+        localStorage.setItem("token", response.token);
+        props.history.push("/admin/dashboard");
       } else if(status === 'failed'){
         alert("something went wrong");
       }

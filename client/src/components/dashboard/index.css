@@ -1,11 +1,4 @@
-.p-sidebar {
-	display: flex;
-	flex-direction: column;
-	background-color: #303456;
-	height: 100vh;
-	align-items: center;
-	width: 100px;
-}
+
 .side-bar-elements {
 	text-align: center;
 	padding: 5px;
@@ -17,7 +10,7 @@
 	align-items: center;
 	justify-content: center;
 }
-.side-bar-elements.active {
+.side-bar-elements.menuActive {
 	background-color: #ea5179;
 	border-radius: 10px;
 }
@@ -31,39 +24,45 @@
 
 .dashboard-area {
 	display: flex;
-	align-content: flex-start;
+	width: 100vw;
+	height: 100vh;
 }
 .navbar{
 	align-self: flex-start;
-
+	width: 100%;
 }
 .dashboard-navbar {
 	display: flex;
 	justify-content: flex-end;
-	width: 89.2vw;
+	align-items: center;
 	background-color: burlywood;
 	height: 60px;
 }
-.main{
-	display: flex;
-	flex-direction: column;
-	height: 80vh;                          
-}
-.main-area {
-	flex-grow: 1;
-	margin-top: 100px;
-	margin-left: 0;
-}
+
 .user-avatar {
-	position: relative;
 	width: 10%;
 	margin-top: 10px;
 	height: 70%;
+	margin-right: 30px;
 }
+
+.main{
+	display: flex;
+	flex-direction: column;
+	height: 80vh;                       
+}
+.main-area {
+	margin-top: 50px;
+	margin-left: 0;
+	align-self: flex-start;
+	width: 100%;
+}
+
 .first-row {
 	display: flex;
 	justify-content: space-evenly;
 	margin-bottom: 50px;
+	flex-wrap: wrap;
 }
 .d-card {
 	width: 30%;
@@ -92,35 +91,49 @@
 	);
 }
 
-.nav-menu{
-    background-color: rgb(10, 2, 60);
-    height: 100vh;
-    width: 150px;
-    display: flex;
-    justify-content: flex-start;
-    top: 0;
+.navBar{
+	height: 100vh;
+    width: 100px;
 }
 
-.nav-text{
+.container{
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+}
+
+.nav-menu{
+    background-color:#303456;
+	height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    top: 0;
+	left: 0;
+}
+
+.nav-menu-items{
+	padding-left: 0;
+}
+
+.navText{
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 8px;
+	width: 60px;
     list-style: none;
     height: 60px;
+	cursor: pointer;
 }
 
-.nav-text a{
+.navText a{
     text-decoration: none;
     color: #ffff;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-.navbar{
-	height: 60px;
-	background-color: #303456;
-	width: 20px;
 }

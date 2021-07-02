@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import queryString from "query-string";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -13,25 +12,35 @@ import Container from "@material-ui/core/Container";
 import Chip from "@material-ui/core/Chip";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import DialogContent from "@material-ui/core/DialogContent";  
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Button from "@material-ui/core/Button";
 import * as FaIcons from 'react-icons/fa';
+import * as AiIcons from 'react-icons/ai';
+
+
+import IconButton from '@material-ui/core/IconButton';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+        },
+    },
 	table: {
 		minWidth: 650,
 	},
-});
+}));
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Product() {
+export default function Product(props) {
+    console.log(props);
 
     const classes = useStyles();
 
@@ -53,16 +62,17 @@ export default function Product() {
 
 
     useEffect(() => {
-        async function getProducts(){
-            let response = await(fetch(
-                `${URL}product?${query}`
-            ));
-            response = await response.json();
-            console.log(response);
-            setProducts(response.data.products);
-        }
         getProducts();
     }, []);
+
+    async function getProducts(){
+        let response = await(fetch(
+            `${URL}product?${query}`
+        ));
+        response = await response.json();
+        console.log(response);
+        setProducts(response.data.products);
+    }
 
     const confirmDelete = (id) => {
         setSelectedID(id);
@@ -74,6 +84,7 @@ export default function Product() {
             return;
         }
         setOpenDialog(false);
+        setOpenToast(false);
         setSelectedID("");
     }
 
@@ -91,19 +102,30 @@ export default function Product() {
         }
         setOpenDialog(false);
         setSelectedID("");
+        getProducts();
     }
 
     return (
         <div>
             <Container maxWidth="lg">
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                    startIcon={<AiIcons.AiOutlinePlus></AiIcons.AiOutlinePlus>}
+                    onClick={() =>
+                        props.history.push({ pathname: 'product/create'})}
+                >
+                    New Data
+                </Button>
 				<TableContainer component={Paper}>
 					<Table className={classes.table} aria-label="simple table">
 						<TableHead>
 							<TableRow>
 								<TableCell>Image</TableCell>
 								<TableCell align="left">Name</TableCell>
-								<TableCell align="right">Price</TableCell>
-								<TableCell align="right">Category</TableCell>
+								<TableCell align="left">Price</TableCell>
+								<TableCell align="left">Category</TableCell>
 								<TableCell align="right"></TableCell>
 							</TableRow>
 						</TableHead>
@@ -133,10 +155,16 @@ export default function Product() {
 											/>
 										</TableCell>
 										<TableCell align="right">
-											<Link to="product/update">
-												<FaIcons.FaEdit />
-											</Link>
-                                            <FaIcons.FaTrash onClick={() => confirmDelete(product._id)}/>
+                                            <div className={classes.root}>
+                                                <IconButton color="primary" onClick={() => props.history.push({
+                                                        pathname: 'product/update/' + product._id })}>
+                                                    <FaIcons.FaEdit />
+                                                </IconButton>
+                                                <IconButton color="secondary" 
+                                                    onClick={() => confirmDelete(product._id)}>
+                                                    <FaIcons.FaTrash />
+                                                </IconButton>
+                                            </div>
 										</TableCell>
 									</TableRow>
 								))}

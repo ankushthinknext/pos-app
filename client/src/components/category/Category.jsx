@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import queryString from "query-string";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -10,7 +9,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
-import Chip from "@material-ui/core/Chip";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -18,20 +16,29 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Button from "@material-ui/core/Button";
 import * as FaIcons from 'react-icons/fa';
+import * as AiIcons from 'react-icons/ai';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import IconButton from '@material-ui/core/IconButton';
 
-const useStyles = makeStyles({
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+        },
+    },
 	table: {
 		minWidth: 650,
 	},
-});
+}));
+
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Category() {
+export default function Category(props) {
 
     const classes = useStyles();
 
@@ -53,17 +60,17 @@ export default function Category() {
 
 
     useEffect(() => {
-        async function getCategories(){
-            let response = await(fetch(
-                `${URL}category?${query}`
-            ));
-            response = await response.json();
-            console.log(response);
-            setCategories(response.data.categories);
-        }
         getCategories();
     }, []);
 
+    async function getCategories(){
+        let response = await(fetch(
+            `${URL}category?${query}`
+        ));
+        response = await response.json();
+        console.log(response);
+        setCategories(response.data.categories);
+    }
 
     const confirmDelete = (id) => {
         setSelectedID(id);
@@ -75,6 +82,7 @@ export default function Category() {
             return;
         }
         setOpenDialog(false);
+        setOpenToast(false);
         setSelectedID("");
     }
 
@@ -91,12 +99,23 @@ export default function Category() {
             setOpenToast(true);
         }
         setOpenDialog(false);
-        setSelectedID("");
+        setSelectedID("");   
+        getCategories();
     }
 
     return (
         <div>
             <Container maxWidth="lg">
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                    startIcon={<AiIcons.AiOutlinePlus></AiIcons.AiOutlinePlus>}
+                    onClick={() =>
+                        props.history.push({ pathname: 'category/create'})}
+                >
+                    New Data
+                </Button>
 				<TableContainer component={Paper}>
 					<Table className={classes.table} aria-label="simple table">
 						<TableHead>
@@ -119,10 +138,19 @@ export default function Category() {
 									<TableRow key={category._id}>
 										<TableCell align="left">{category.name}</TableCell>
 										<TableCell align="right">
-											<Link to="category/update">
-												<FaIcons.FaEdit />
-											</Link>
-                                            <FaIcons.FaTrash onClick={() => confirmDelete(category._id)}/>
+                                            <div className={classes.root}>
+                                                <IconButton 
+                                                        onClick={() => props.history.push({
+                                                        pathname: 'category/update/' + category._id })}
+                                                        color="primary">
+                                                    <FaIcons.FaEdit />
+                                                </IconButton>
+                                                <IconButton 
+                                                        onClick={() => confirmDelete(category._id)} 
+                                                        color="secondary">
+                                                    <FaIcons.FaTrash />
+                                                </IconButton>
+                                            </div>
 										</TableCell>
 									</TableRow>
 								))}
